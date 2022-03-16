@@ -1,0 +1,2 @@
+# CRG-projekt
+Správa skriniek
