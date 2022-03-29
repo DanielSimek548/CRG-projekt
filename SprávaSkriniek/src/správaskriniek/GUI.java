@@ -5,7 +5,8 @@
 package správaskriniek;
         
 import java.sql.*;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+
 //import com.mysql.jdbc.Connection;
 /**
  *
@@ -163,6 +164,9 @@ public class GUI extends javax.swing.JFrame {
 
     private void ClearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ClearButtonActionPerformed
         // TODO add your handling code here:
+        txtClass.setText("");
+        txtName.setText("");
+        txtSurname.setText("");
     }//GEN-LAST:event_ClearButtonActionPerformed
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
