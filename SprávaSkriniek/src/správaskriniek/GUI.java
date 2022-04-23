@@ -3,8 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package správaskriniek;
-        
+
+import java.awt.PopupMenu;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 //import com.mysql.jdbc.Connection;
@@ -19,9 +22,14 @@ public class GUI extends javax.swing.JFrame {
      */
     Connection con = null;
     PreparedStatement pst = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+    String query = "INSERT INTO `sekciaa` (name, surname, class, number) VALUES (?, ?, ?, ?);";
+    String delete = "DELETE * FROM `skrinky`.`sekciaa` WHERE  `number`=?;";
+
     public GUI() {
         initComponents();
-        
+
     }
 
     /**
@@ -45,6 +53,8 @@ public class GUI extends javax.swing.JFrame {
         SearchButton = new javax.swing.JButton();
         ClearButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        lockerNumber = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("School locker management system");
@@ -97,6 +107,8 @@ public class GUI extends javax.swing.JFrame {
 
         jLabel4.setText("Name");
 
+        jLabel5.setText("Locker number");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -111,25 +123,26 @@ public class GUI extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)
                             .addComponent(AddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(ClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(UpdateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(DeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 10, Short.MAX_VALUE))
-                            .addComponent(txtName)
-                            .addComponent(txtSurname)
-                            .addComponent(txtClass))
-                        .addContainerGap())
+                                .addComponent(DeleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 20, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ClearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SearchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(txtName)
+                            .addComponent(txtSurname)
+                            .addComponent(txtClass)
+                            .addComponent(lockerNumber))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,16 +160,20 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtClass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(lockerNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(AddButton)
                     .addComponent(UpdateButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(DeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(AddButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(DeleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addComponent(SearchButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ClearButton)
-                .addGap(15, 15, 15))
+                .addContainerGap())
         );
 
         pack();
@@ -167,10 +184,42 @@ public class GUI extends javax.swing.JFrame {
         txtClass.setText("");
         txtName.setText("");
         txtSurname.setText("");
+        lockerNumber.setText("");
     }//GEN-LAST:event_ClearButtonActionPerformed
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
-        // TODO add your handling code here:
+
+        String name = JOptionPane.showInputDialog(rootPane, "Type number of locker you want to delete");
+        //System.out.print(name);
+
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
+            stmt = con.createStatement();
+            String selectNumber = "SELECT number FROM `skrinky`.`sekciaa` WHERE  `number`=" + name + ";";
+            rs = stmt.executeQuery(selectNumber);
+
+            rs.next();
+            String fname = rs.getString("number");
+            System.out.print(fname);
+
+            if (fname != "0") {
+                try {
+                    //con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
+                    pst = con.prepareStatement(delete);
+                    pst.setString(1, name);
+                    pst.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Vymazany lol");
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex);
+                }
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Neymazany lol");
+        }
+
+
     }//GEN-LAST:event_DeleteButtonActionPerformed
 
     private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateButtonActionPerformed
@@ -178,19 +227,32 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_UpdateButtonActionPerformed
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
-        try{
-            String query = "INSERT INTO `sekciaa` (name, surname, class) VALUES (?, ?, ?);";
+
+        try {
+            String idk = lockerNumber.getText();
             con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
-            pst = con.prepareStatement(query);
-            pst.setString(1, txtName.getText());
-            pst.setString(2, txtSurname.getText());
-            pst.setString(3, txtClass.getText());
-            pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Registrovany lol");
+            stmt = con.createStatement();
+            String selectNumber = "SELECT number FROM `skrinky`.`sekciaa` WHERE  `number`=" + idk + ";";
+            rs = stmt.executeQuery(selectNumber);
+
+            rs.next();
+            String fname = rs.getString("number");
+            System.out.print(idk);
             
-        }catch(Exception ex){
-            JOptionPane.showMessageDialog(null, ex);
+            txtClass.setText("");
+            txtName.setText("");
+            txtSurname.setText("");
+            lockerNumber.setText("");
+
+
+            if (fname != "0") {
+                JOptionPane.showMessageDialog(null, "Neregistrovany lol");
+            } 
+        } catch (Exception ex) {
+            //JOptionPane.showMessageDialog(null, ex);
+            Pridaj();
         }
+
     }//GEN-LAST:event_AddButtonActionPerformed
 
     private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
@@ -201,6 +263,27 @@ public class GUI extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_SearchButtonActionPerformed
 
+    
+    public void Pridaj(){
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
+            pst = con.prepareStatement(query);
+            pst.setString(1, txtName.getText());
+            pst.setString(2, txtSurname.getText());
+            pst.setString(3, txtClass.getText());
+            pst.setString(4, lockerNumber.getText());
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Registrovany lol");
+
+            txtClass.setText("");
+            txtName.setText("");
+            txtSurname.setText("");
+            lockerNumber.setText("");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -228,6 +311,7 @@ public class GUI extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -235,8 +319,7 @@ public class GUI extends javax.swing.JFrame {
             }
         });
     }
-    
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddButton;
@@ -248,6 +331,8 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JTextField lockerNumber;
     private javax.swing.JTextField txtClass;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtSurname;

@@ -35,7 +35,8 @@
                           <Component id="jLabel2" min="-2" pref="67" max="-2" attributes="0"/>
                           <Component id="jLabel4" min="-2" pref="67" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="0" min="-2" pref="67" max="-2" attributes="0"/>
-                          <Component id="AddButton" alignment="0" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="AddButton" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -43,24 +44,24 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
+                          <Component id="ClearButton" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="SearchButton" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
                               <Component id="UpdateButton" min="-2" pref="100" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="DeleteButton" min="-2" pref="100" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="10" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="txtName" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txtSurname" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txtClass" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="20" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="ClearButton" min="-2" pref="100" max="-2" attributes="0"/>
-                          <Component id="SearchButton" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="txtName" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtSurname" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtClass" alignment="0" max="32767" attributes="0"/>
+                          <Component id="lockerNumber" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -85,17 +86,22 @@
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtClass" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="32" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                  <Component id="lockerNumber" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="35" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="AddButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="UpdateButton" alignment="3" max="32767" attributes="0"/>
                   <Component id="DeleteButton" alignment="3" max="32767" attributes="0"/>
-                  <Component id="AddButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="SearchButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="ClearButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -166,6 +172,13 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Name"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Locker number"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="lockerNumber">
     </Component>
   </SubComponents>
 </Form>
