@@ -25,7 +25,7 @@ public class GUI extends javax.swing.JFrame {
     Statement stmt = null;
     ResultSet rs = null;
     String query = "INSERT INTO `sekciaa` (name, surname, class, number) VALUES (?, ?, ?, ?);";
-    String delete = "DELETE * FROM `skrinky`.`sekciaa` WHERE  `number`=?;";
+    String delete = "DELETE FROM `skrinky`.`sekciaa` WHERE `number`=?;";
 
     public GUI() {
         initComponents();
@@ -195,7 +195,7 @@ public class GUI extends javax.swing.JFrame {
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
             stmt = con.createStatement();
-            String selectNumber = "SELECT number FROM `skrinky`.`sekciaa` WHERE  `number`=" + name + ";";
+            String selectNumber = "SELECT number FROM `skrinky`.`sekciaa` WHERE `number`=" + name + ";";
             rs = stmt.executeQuery(selectNumber);
 
             rs.next();
@@ -223,7 +223,45 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_DeleteButtonActionPerformed
 
     private void UpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateButtonActionPerformed
-        // TODO add your handling code here:
+
+        try {
+            String idk = lockerNumber.getText();
+            con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
+            stmt = con.createStatement();
+            String select = "SELECT * FROM `skrinky`.`sekciaa` WHERE  `number`=" + idk + ";";
+            rs = stmt.executeQuery(select);
+
+            rs.next();
+            String jName = rs.getString("name");
+            String jSurname = rs.getString("surname");
+            String jClass = rs.getString("class");
+            String tName = txtName.getText();
+            String tSurname = txtSurname.getText();
+            String tClass = txtClass.getText();
+
+            txtClass.setText("");
+            txtName.setText("");
+            txtSurname.setText("");
+            lockerNumber.setText("");
+
+            String updateN = "UPDATE `skrinky`.`sekciaa` SET `name`='" + tName + "' WHERE  `number`=" + idk + ";";
+            pst = con.prepareStatement(updateN);
+            pst.executeUpdate();
+
+            String updateS = "UPDATE `skrinky`.`sekciaa` SET `surname`='" + tSurname + "' WHERE  `number`=" + idk + ";";
+            pst = con.prepareStatement(updateS);
+            pst.executeUpdate();
+
+            String updateC = "UPDATE `skrinky`.`sekciaa` SET `class`='" + tClass + "' WHERE  `number`=" + idk + ";";
+            pst = con.prepareStatement(updateC);
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Zmena uspesna lol");
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Skrinka sa nepouziva lol");
+        }
+
     }//GEN-LAST:event_UpdateButtonActionPerformed
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
@@ -237,17 +275,16 @@ public class GUI extends javax.swing.JFrame {
 
             rs.next();
             String fname = rs.getString("number");
-            System.out.print(idk);
-            
+            //System.out.print(idk);
+
             txtClass.setText("");
             txtName.setText("");
             txtSurname.setText("");
             lockerNumber.setText("");
 
-
             if (fname != "0") {
                 JOptionPane.showMessageDialog(null, "Neregistrovany lol");
-            } 
+            }
         } catch (Exception ex) {
             //JOptionPane.showMessageDialog(null, ex);
             Pridaj();
@@ -261,10 +298,23 @@ public class GUI extends javax.swing.JFrame {
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         // TODO add your handling code here:
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
+            stmt = con.createStatement();
+            String selectNumber = "SELECT number FROM `skrinky`.`sekciaa` WHERE `number`=" + name + ";";
+            rs = stmt.executeQuery(selectNumber);
+
+            rs.next();
+            String fname = rs.getString("number");
+            System.out.print(fname);
+
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Neymazany lol");
+        }
     }//GEN-LAST:event_SearchButtonActionPerformed
 
-    
-    public void Pridaj(){
+    public void Pridaj() {
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
             pst = con.prepareStatement(query);
@@ -284,6 +334,7 @@ public class GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
+
     /**
      * @param args the command line arguments
      */
