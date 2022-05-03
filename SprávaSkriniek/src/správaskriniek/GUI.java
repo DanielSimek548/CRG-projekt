@@ -299,18 +299,25 @@ public class GUI extends javax.swing.JFrame {
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         // TODO add your handling code here:
         try {
+            String idk = lockerNumber.getText();
             con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
             stmt = con.createStatement();
-            String selectNumber = "SELECT number FROM `skrinky`.`sekciaa` WHERE `number`=" + name + ";";
+            String selectNumber = "SELECT * FROM `skrinky`.`sekciaa` WHERE `number`=" + idk + ";";
             rs = stmt.executeQuery(selectNumber);
 
             rs.next();
-            String fname = rs.getString("number");
-            System.out.print(fname);
+            
+            String jName = rs.getString("name");
+            String jSurname = rs.getString("surname");
+            String jClass = rs.getString("class");
+            
+            txtClass.setText(jClass);
+            txtName.setText(jName);
+            txtSurname.setText(jSurname);
 
             
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Neymazany lol");
+            JOptionPane.showMessageDialog(null, "Skrinka sa nepouziva lol");
         }
     }//GEN-LAST:event_SearchButtonActionPerformed
 
