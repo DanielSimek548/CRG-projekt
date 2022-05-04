@@ -185,12 +185,13 @@ public class GUI extends javax.swing.JFrame {
         txtName.setText("");
         txtSurname.setText("");
         lockerNumber.setText("");
+        //Vymaže vyplnené riadky
     }//GEN-LAST:event_ClearButtonActionPerformed
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
 
         String name = JOptionPane.showInputDialog(rootPane, "Type number of locker you want to delete");
-        //System.out.print(name);
+        //Vyskakovanie okno, ktoré sa pýta aké skrinka sa má vymazať
 
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
@@ -200,7 +201,7 @@ public class GUI extends javax.swing.JFrame {
 
             rs.next();
             String fname = rs.getString("number");
-            System.out.print(fname);
+            //System.out.print(fname);
 
             if (fname != "0") {
                 try {
@@ -235,9 +236,12 @@ public class GUI extends javax.swing.JFrame {
             String jName = rs.getString("name");
             String jSurname = rs.getString("surname");
             String jClass = rs.getString("class");
+            //Zapíše výsledky z sql do stringu 
+            
             String tName = txtName.getText();
             String tSurname = txtSurname.getText();
             String tClass = txtClass.getText();
+            //Zapíše vyplnené riadky do stringu 
 
             txtClass.setText("");
             txtName.setText("");
@@ -247,14 +251,17 @@ public class GUI extends javax.swing.JFrame {
             String updateN = "UPDATE `skrinky`.`sekciaa` SET `name`='" + tName + "' WHERE  `number`=" + idk + ";";
             pst = con.prepareStatement(updateN);
             pst.executeUpdate();
+            //Update mena
 
             String updateS = "UPDATE `skrinky`.`sekciaa` SET `surname`='" + tSurname + "' WHERE  `number`=" + idk + ";";
             pst = con.prepareStatement(updateS);
             pst.executeUpdate();
+            //Update priezviska
 
             String updateC = "UPDATE `skrinky`.`sekciaa` SET `class`='" + tClass + "' WHERE  `number`=" + idk + ";";
             pst = con.prepareStatement(updateC);
             pst.executeUpdate();
+            //Update čísla skrinky
 
             JOptionPane.showMessageDialog(null, "Zmena uspesna lol");
 
@@ -275,7 +282,7 @@ public class GUI extends javax.swing.JFrame {
 
             rs.next();
             String fname = rs.getString("number");
-            //System.out.print(idk);
+            //Kontrola či skrinka už existuje
 
             txtClass.setText("");
             txtName.setText("");
@@ -284,9 +291,10 @@ public class GUI extends javax.swing.JFrame {
 
             if (fname != "0") {
                 JOptionPane.showMessageDialog(null, "Neregistrovany lol");
+                //Ak select najde aspoň jeden výsledok tak nezaregistruje skrinku pretože sa používa
             }
         } catch (Exception ex) {
-            //JOptionPane.showMessageDialog(null, ex);
+            //Ak skrinka neexistuje tak využije fukciu, kt. ju zapíše
             Pridaj();
         }
 
@@ -304,16 +312,19 @@ public class GUI extends javax.swing.JFrame {
             stmt = con.createStatement();
             String selectNumber = "SELECT * FROM `skrinky`.`sekciaa` WHERE `number`=" + idk + ";";
             rs = stmt.executeQuery(selectNumber);
+            //Vyhľadá všetko s daným číslom skrinky
 
             rs.next();
             
             String jName = rs.getString("name");
             String jSurname = rs.getString("surname");
             String jClass = rs.getString("class");
+            //Zapíše výsledky z sql do stringu 
             
             txtClass.setText(jClass);
             txtName.setText(jName);
             txtSurname.setText(jSurname);
+            //Zapíše výsledky do labelov
 
             
         } catch (Exception ex) {
@@ -331,6 +342,7 @@ public class GUI extends javax.swing.JFrame {
             pst.setString(4, lockerNumber.getText());
             pst.executeUpdate();
             JOptionPane.showMessageDialog(null, "Registrovany lol");
+            //Všetko čo je zapísané v label zapíše do databázy
 
             txtClass.setText("");
             txtName.setText("");
