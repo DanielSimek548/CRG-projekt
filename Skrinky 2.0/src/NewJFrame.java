@@ -3,6 +3,12 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import java.io.FileOutputStream;
+import java.io.*;
+import java.util.*;
+import java.sql.*; 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 
 public class NewJFrame extends javax.swing.JFrame {
 
@@ -31,6 +37,7 @@ public class NewJFrame extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         SearchButton = new javax.swing.JButton();
         ClearButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -97,21 +104,35 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addGap(28, 28, 28))
         );
 
+        jButton1.setText("Print data to pdf");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
-                .addComponent(jLabel5)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel5))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(jButton1)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -126,7 +147,9 @@ public class NewJFrame extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(51, 51, 51))
         );
 
         jLabel2.getAccessibleContext().setAccessibleName("Name");
@@ -269,7 +292,7 @@ public class NewJFrame extends javax.swing.JFrame {
             lockerNumber.setText("");
 
             if (fname != "0") {
-                JOptionPane.showMessageDialog(null, "Neregistrovany lol");
+                JOptionPane.showMessageDialog(null, "Skrinka sa už používa!");
                 //Ak select najde aspoň jeden výsledok tak nezaregistruje skrinku pretože sa používa
             }
         } catch (Exception ex) {
@@ -298,7 +321,7 @@ public class NewJFrame extends javax.swing.JFrame {
                     pst = con.prepareStatement(delete);
                     pst.setString(1, name);
                     pst.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "Vymazany lol");
+                    JOptionPane.showMessageDialog(null, "Údaju úspešne vymazané!");
 
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, ex);
@@ -306,7 +329,7 @@ public class NewJFrame extends javax.swing.JFrame {
             }
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Neymazany lol");
+            JOptionPane.showMessageDialog(null, "ERROR");
         }
 
 
@@ -352,10 +375,10 @@ public class NewJFrame extends javax.swing.JFrame {
             pst.executeUpdate();
             //Update čísla skrinky
 
-            JOptionPane.showMessageDialog(null, "Zmena uspesna lol");
+            JOptionPane.showMessageDialog(null, "Zmena údajov bola úspešná!");
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Skrinka sa nepouziva lol");
+            JOptionPane.showMessageDialog(null, "Skrinka ešte nie je registrovaná!");
         }
     }//GEN-LAST:event_UpdateButtonActionPerformed
 
@@ -369,8 +392,51 @@ public class NewJFrame extends javax.swing.JFrame {
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
         TabulkaFrame TF = new TabulkaFrame();
         TF.show();
-        dispose();
     }//GEN-LAST:event_SearchButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String query_set = "SELECT * FROM  `sekciaa` ";
+
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(query_set);
+            
+                Document my_pdf_report = new Document();
+                PdfWriter.getInstance(my_pdf_report, new FileOutputStream("pdf_report_from_sql_using_java.pdf"));
+                my_pdf_report.open();            
+                //we have four columns in our table
+                PdfPTable my_report_table = new PdfPTable(5);
+                //create a cell object
+                PdfPCell table_cell;
+               
+                while (rs.next()) {                
+                                String name = rs.getString("name");
+                                table_cell=new PdfPCell(new Phrase(name));
+                                my_report_table.addCell(table_cell);
+                                String surname =rs.getString("surname");
+                                table_cell=new PdfPCell(new Phrase(surname));
+                                my_report_table.addCell(table_cell);
+                                String classroom =rs.getString("class");
+                                table_cell=new PdfPCell(new Phrase(classroom));
+                                my_report_table.addCell(table_cell);
+                                String number=rs.getString("number");
+                                table_cell=new PdfPCell(new Phrase(number));
+                                my_report_table.addCell(table_cell);
+                                String date=rs.getString("date");
+                                table_cell=new PdfPCell(new Phrase(date));
+                                my_report_table.addCell(table_cell);
+                                }
+                /* Attach report table to PDF */
+                my_pdf_report.add(my_report_table);                       
+                my_pdf_report.close();
+                
+                JOptionPane.showMessageDialog(null, "Váš dokument bol úspešne vytlačený!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public void Pridaj() {
         try {
@@ -381,7 +447,7 @@ public class NewJFrame extends javax.swing.JFrame {
             pst.setString(3, txtClass.getText());
             pst.setString(4, lockerNumber.getText());
             pst.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Registrovany lol");
+            JOptionPane.showMessageDialog(null, "Údaje boli registrované!");
             //Všetko čo je zapísané v label zapíše do databázy
 
             txtClass.setText("");
@@ -432,6 +498,7 @@ public class NewJFrame extends javax.swing.JFrame {
     private javax.swing.JButton DeleteButton;
     private javax.swing.JButton SearchButton;
     private javax.swing.JButton UpdateButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
