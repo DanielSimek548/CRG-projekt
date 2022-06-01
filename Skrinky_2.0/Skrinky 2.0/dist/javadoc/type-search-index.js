@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"<Unnamed>","l":"NewJFrame"},{"p":"<Unnamed>","l":"TabulkaFrame"},{"p":"<Unnamed>","l":"User"}];updateSearchResults();
