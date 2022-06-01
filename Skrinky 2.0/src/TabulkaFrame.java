@@ -1,20 +1,34 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Samko
  */
 public class TabulkaFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form TabulkaFrame
-     */
+    Connection con = null;
+    PreparedStatement pst = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+    ArrayList<User> usersList = new ArrayList<User>();
+
     public TabulkaFrame() {
         initComponents();
+        jTable1.setAutoCreateRowSorter(true);
+        Show_Users_In_JTable();
     }
 
     /**
@@ -30,12 +44,14 @@ public class TabulkaFrame extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         BackButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         searchfield = new javax.swing.JTextField();
         searchfButton = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        javax.swing.JTable table = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(153, 255, 204));
 
@@ -44,25 +60,46 @@ public class TabulkaFrame extends javax.swing.JFrame {
         jPanel4.setBackground(new java.awt.Color(0, 0, 255));
 
         BackButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_back_arrow_32px.png"))); // NOI18N
+        BackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BackButtonActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addContainerGap()
                 .addComponent(BackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(23, Short.MAX_VALUE)
-                .addComponent(BackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40))
         );
 
         searchfButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8_search_18px_1.png"))); // NOI18N
+        searchfButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchfButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -89,43 +126,29 @@ public class TabulkaFrame extends javax.swing.JFrame {
 
         searchfield.getAccessibleContext().setAccessibleDescription("");
 
-        table.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        table.setModel(new javax.swing.table.DefaultTableModel(
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Name:", "Surname:", "Class:", "Locker number:", "Date:"
+                "Name", "Surname", "Class", "Locker", "Date"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(table);
+        ));
+        jScrollPane2.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -141,6 +164,99 @@ public class TabulkaFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
+        NewJFrame JF = new NewJFrame();
+        JF.show();
+        dispose();
+    }//GEN-LAST:event_BackButtonActionPerformed
+
+    private void searchfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchfButtonActionPerformed
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        dtm.setRowCount(0);
+        Show_Users_In_JTable_Search();
+    }//GEN-LAST:event_searchfButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        dtm.setRowCount(0);
+        Show_Users_In_JTable();
+    }//GEN-LAST:event_jButton1ActionPerformed
+    public ArrayList<User> getUsersList() {
+        ArrayList<User> usersList = new ArrayList<User>();
+
+        String query = "SELECT * FROM  `sekciaa` ";
+
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(query);
+
+            User user;
+
+            while (rs.next()) {
+                user = new User(rs.getString("name"), rs.getString("surname"), rs.getString("class"), rs.getString("number"), rs.getString("date"));
+                usersList.add(user);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return usersList;
+    }
+
+    public void Show_Users_In_JTable() {
+        ArrayList<User> list = getUsersList();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        Object[] row = new Object[5];
+        for (int i = 0; i < list.size(); i++) {
+            row[0] = list.get(i).getMeno();
+            row[1] = list.get(i).getPriezvisko();
+            row[2] = list.get(i).getTrieda();
+            row[3] = list.get(i).getSkrinka();
+            row[4] = list.get(i).getDatum();
+            model.addRow(row);
+        }
+    }
+    
+    public ArrayList<User> getUsersListSearch() {
+        ArrayList<User> usersList = new ArrayList<User>();
+
+        String query = "SELECT * FROM  `sekciaa` WHERE `name` OR `surname` OR `class` OR `number` LIKE '%" + searchfield.getText() +"%'";
+
+        try {
+            con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(query);
+
+            User user;
+
+            while (rs.next()) {
+                user = new User(rs.getString("name"), rs.getString("surname"), rs.getString("class"), rs.getString("number"), rs.getString("date"));
+                usersList.add(user);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return usersList;
+    }
+
+    public void Show_Users_In_JTable_Search() {
+        ArrayList<User> list = getUsersListSearch();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        Object[] row = new Object[5];
+        for (int i = 0; i < list.size(); i++) {
+            row[0] = list.get(i).getMeno();
+            row[1] = list.get(i).getPriezvisko();
+            row[2] = list.get(i).getTrieda();
+            row[3] = list.get(i).getSkrinka();
+            row[4] = list.get(i).getDatum();
+            model.addRow(row);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -173,16 +289,19 @@ public class TabulkaFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new TabulkaFrame().setVisible(true);
+
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JButton searchfButton;
     private javax.swing.JTextField searchfield;
     // End of variables declaration//GEN-END:variables

@@ -44,6 +44,7 @@ public class NewJFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 255));
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(0, 255, 255));
 
@@ -366,30 +367,9 @@ public class NewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_ClearButtonActionPerformed
 
     private void SearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchButtonActionPerformed
-      try {
-            String idk = lockerNumber.getText();
-            con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
-            stmt = con.createStatement();
-            String selectNumber = "SELECT * FROM `skrinky`.`sekciaa` WHERE `number`=" + idk + ";";
-            rs = stmt.executeQuery(selectNumber);
-            //Vyhľadá všetko s daným číslom skrinky
-
-            rs.next();
-            
-            String jName = rs.getString("name");
-            String jSurname = rs.getString("surname");
-            String jClass = rs.getString("class");
-            //Zapíše výsledky z sql do stringu 
-            
-            txtClass.setText(jClass);
-            txtName.setText(jName);
-            txtSurname.setText(jSurname);
-            //Zapíše výsledky do labelov
-
-            
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Skrinka sa nepouziva lol");
-        }
+        TabulkaFrame TF = new TabulkaFrame();
+        TF.show();
+        dispose();
     }//GEN-LAST:event_SearchButtonActionPerformed
 
     public void Pridaj() {
