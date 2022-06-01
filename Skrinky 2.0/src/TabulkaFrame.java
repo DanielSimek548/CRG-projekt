@@ -51,6 +51,7 @@ public class TabulkaFrame extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(153, 255, 204));
 
@@ -139,7 +140,9 @@ public class TabulkaFrame extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane2)
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -153,7 +156,7 @@ public class TabulkaFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,7 +222,7 @@ public class TabulkaFrame extends javax.swing.JFrame {
     public ArrayList<User> getUsersListSearch() {
         ArrayList<User> usersList = new ArrayList<User>();
 
-        String query = "SELECT * FROM  `sekciaa` WHERE `name` LIKE '%" + searchfield.getText() +"%' OR `surname` LIKE '%" + searchfield.getText() +"%' OR `class` LIKE '%" + searchfield.getText() +"%' OR `number` LIKE '%" + searchfield.getText() +"%'";
+        String query = "SELECT * FROM  `sekciaa` WHERE `name` OR `surname` OR `class` OR `number` LIKE '%" + searchfield.getText() +"%'";
 
         try {
             con = DriverManager.getConnection("jdbc:mysql://localhost/skrinky", "root", "");
